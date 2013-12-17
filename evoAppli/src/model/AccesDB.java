@@ -37,7 +37,7 @@ public class AccesDB {
 		}
 		
 		try{
-			connexion = DriverManager.getConnection("jdbc:mysql://localhost/evolappli", "root","");
+			connexion = DriverManager.getConnection("jdbc:mysql://localhost/evoappli", "root","");
 		} catch(SQLException sqlE){
 			JOptionPane.showMessageDialog(null,sqlE,"Erreur de connexion à la DB", JOptionPane.ERROR_MESSAGE);
 		}
