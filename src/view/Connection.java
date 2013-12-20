@@ -64,7 +64,7 @@ public class Connection extends JDialog {
 			Object source = e.getSource();                        
 			if (source == butOK) {                                
 				if (verifConnection() == true){                                        
-					new view.MainJFrame();                                        
+					new view.accueil();                                        
 					hide();                                       
 					//dispose();
 					}

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import model.application;
+import model.applicationArbre;
 import model.getData;
 import model.utilisateur;
 
@@ -18,6 +20,14 @@ import model.utilisateur;
 		
 		public static utilisateur getUser(String nom) {
 			return getData.getUser(nom);        }
+		
+		public static Vector<application> getApplication(){
+			return model.getData.getApplication();
+		}
+		
+		public static Vector<applicationArbre> getApplicationArbre(){
+			return model.getData.getApplicationTableau();
+		}
 	}
 	
 
