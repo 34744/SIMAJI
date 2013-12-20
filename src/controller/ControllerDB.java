@@ -26,7 +26,11 @@ import model.utilisateur;
 		}
 		
 		public static Vector<applicationArbre> getApplicationArbre(){
-			return model.getData.getApplicationTableau();
+			return model.getData.getApplicationArbre();
+		}
+		
+		public static applicationArbre getApplicationArbre(String application){
+			return model.getData.getApplicationArbre(application);
 		}
 	}
 	

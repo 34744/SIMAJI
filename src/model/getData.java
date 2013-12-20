@@ -71,7 +71,7 @@ public class getData {
 		return v;
 	}
 	
-	public static Vector<applicationArbre> getApplicationTableau(){
+	public static Vector<applicationArbre> getApplicationArbre(){
 		Vector<model.applicationArbre> v = new Vector<model.applicationArbre>();
 		
 		try{
@@ -84,6 +84,26 @@ public class getData {
 			while(donnees.next()){
 				v.addElement(new applicationArbre(donnees.getInt("IdApplication"),
 												  donnees.getString("nomApplication")));
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static applicationArbre getApplicationArbre(String application){
+		model.applicationArbre v = new model.applicationArbre();
+		
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+			
+			String requeteSQL = "SELECT * FROM application WHERE nomApplication = '" + application +"'";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.setIdApplication(donnees.getInt("IdApplication"));
+				v.setNomApplication(donnees.getString("nomApplication"));
 			}
 		}catch(SQLException e){
 			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
