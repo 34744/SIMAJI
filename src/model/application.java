@@ -11,6 +11,11 @@ public class application {
 		this.nomApplication=nomApplication;
 	}
 
+	public application() {
+		// TODO Auto-generated constructor stub
+	super();
+	}
+
 	public int getIdApplication() {
 		return idApplication;
 	}

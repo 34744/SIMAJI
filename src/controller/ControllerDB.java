@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import view.Application;
 import model.application;
 import model.applicationArbre;
 import model.getData;
+import model.majData;
 import model.utilisateur;
 
 	public class ControllerDB {
@@ -31,6 +33,10 @@ import model.utilisateur;
 		
 		public static applicationArbre getApplicationArbre(String application){
 			return model.getData.getApplicationArbre(application);
+		}
+		
+		public static void ModifApplication(application application){
+			majData.MajApplication(application);
 		}
 	}
 	

@@ -112,7 +112,7 @@ public class accueil extends JPanel {
 			if(source == btnConfig){
 				System.out.println("config");
 				controller.gestionFenetre.eraseContainerPaneMainJFrame();
-				controller.gestionFenetre.configuration();
+				controller.gestionFenetre.configurationModif(false);
 				
 			
 			//	frame.hide();

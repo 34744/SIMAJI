@@ -14,8 +14,14 @@ public class gestionFenetre {
 		
 	}
 	
-	public static void configuration (){
-		view.Parametres config = new view.Parametres();
+	public static void configurationModif (boolean modification){
+		view.Parametres config = new view.Parametres(false);
+		view.mainJFrame.setContainerPanel(config);
+		
+	}
+	
+	public static void configurationAjout (boolean modification){
+		view.Parametres config = new view.Parametres(true);
 		view.mainJFrame.setContainerPanel(config);
 		
 	}
