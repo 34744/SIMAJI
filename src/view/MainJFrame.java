@@ -17,27 +17,6 @@ public class mainJFrame extends JFrame {
 	private Container cont;
 
 	private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					mainJFrame window = new mainJFrame();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			
-			}
-		});
-	}*/
-		
-		
-	
-
 	
 	/**
 	 * Create the application.

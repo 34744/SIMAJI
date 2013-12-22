@@ -25,7 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-public class modificationApplication extends JPanel{
+public class Application extends JPanel{
 
 	private JFrame frame;
 	private JTable table;
@@ -41,38 +41,14 @@ public class modificationApplication extends JPanel{
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					modificationApplication window = new modificationApplication();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-*/
-	/**
-	 * Create the application.
-	 */
-	
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	
 	
-	public modificationApplication() {
-		//frame = new JFrame();
-		//frame.setType(Type.UTILITY);
-		/*frame.getContentPane().*/setBackground(new Color(176, 196, 222));
+	public Application() {
 		
+		setBackground(new Color(176, 196, 222));
 		vectAppli = controller.ControllerDB.getApplicationArbre();
-		
 		modelAppli = new modelTableauApplication(vectAppli);
-		/*frame.getContentPane().*/setLayout(null);
+		setLayout(null);
 		table = new JTable(modelAppli);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
@@ -103,44 +79,44 @@ public class modificationApplication extends JPanel{
 		/*frame.getContentPane().*/add(toolBar);
 		
 
-		btnHome.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/home41.png")));
-		btnHome.setSelectedIcon(new ImageIcon(modificationApplication.class.getResource("/icones/home41.png")));
+		btnHome.setIcon(new ImageIcon(Application.class.getResource("/icones/home41.png")));
+		btnHome.setSelectedIcon(new ImageIcon(Application.class.getResource("/icones/home41.png")));
 		toolBar.add(btnHome);
-		btnSoftware.setSelectedIcon(new ImageIcon(modificationApplication.class.getResource("/icones/Application41.png")));
+		btnSoftware.setSelectedIcon(new ImageIcon(Application.class.getResource("/icones/Application41.png")));
 		
 
-		btnSoftware.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/Application41.png")));
+		btnSoftware.setIcon(new ImageIcon(Application.class.getResource("/icones/Application41.png")));
 		toolBar.add(btnSoftware);
-		btnUpdate.setSelectedIcon(new ImageIcon(modificationApplication.class.getResource("/icones/update41.png")));
+		btnUpdate.setSelectedIcon(new ImageIcon(Application.class.getResource("/icones/update41.png")));
 		
 
-		btnUpdate.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/update41.png")));
+		btnUpdate.setIcon(new ImageIcon(Application.class.getResource("/icones/update41.png")));
 		toolBar.add(btnUpdate);
-		btnRapports.setSelectedIcon(new ImageIcon(modificationApplication.class.getResource("/icones/rapports41.png")));
+		btnRapports.setSelectedIcon(new ImageIcon(Application.class.getResource("/icones/rapports41.png")));
 		
 
-		btnRapports.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/rapports41.png")));
+		btnRapports.setIcon(new ImageIcon(Application.class.getResource("/icones/rapports41.png")));
 		toolBar.add(btnRapports);
-		btnConfig.setSelectedIcon(new ImageIcon(modificationApplication.class.getResource("/icones/configuration41.png")));
+		btnConfig.setSelectedIcon(new ImageIcon(Application.class.getResource("/icones/configuration41.png")));
 		
 
-		btnConfig.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/configuration41.png")));
+		btnConfig.setIcon(new ImageIcon(Application.class.getResource("/icones/configuration41.png")));
 		toolBar.add(btnConfig);
 		
 		JToggleButton tglbtnModifier = new JToggleButton("Modifier");
-		tglbtnModifier.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/modifiable41.png")));
+		tglbtnModifier.setIcon(new ImageIcon(Application.class.getResource("/icones/modifiable41.png")));
 		
 		tglbtnModifier.setToolTipText("Modifier");
 		
 		if(tglbtnModifier.isSelected()==false)
 		{
-		tglbtnModifier.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/modifiable41.png")));
+		tglbtnModifier.setIcon(new ImageIcon(Application.class.getResource("/icones/modifiable41.png")));
 		System.out.println("test");
 		}
 		
 		else
 		{
-			tglbtnModifier.setIcon(new ImageIcon(modificationApplication.class.getResource("/icones/modifiableG41.png")));
+			tglbtnModifier.setIcon(new ImageIcon(Application.class.getResource("/icones/modifiableG41.png")));
 			
 		}
 		toolBar.add(tglbtnModifier);

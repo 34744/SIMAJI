@@ -9,8 +9,14 @@ public class gestionFenetre {
 		}
 	
 	public static void application (){
-		view.modificationApplication appli = new view.modificationApplication();
+		view.Application appli = new view.Application();
 		view.mainJFrame.setContainerPanel(appli);
+		
+	}
+	
+	public static void configuration (){
+		view.Parametres config = new view.Parametres();
+		view.mainJFrame.setContainerPanel(config);
 		
 	}
 	
