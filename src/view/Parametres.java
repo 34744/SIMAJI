@@ -66,15 +66,17 @@ public class Parametres extends JPanel {
 	private JButton btnUpdate = new JButton("Mise \u00E0 jour");
 	private JButton btnNewAppli = new JButton("Ajouter");
 	private JButton btnAjouterAppli = new JButton("Valider");
+	private JLabel lbIdModifAppli = new JLabel("lbModifAppli");
 	private JTable tableAppli;
 	private Vector<model.applicationArbre> vectAppli = new Vector<model.applicationArbre>();
 	private modelTableauApplication modelAppli;
 	public application appli = new application();
 	private final JButton btnModifier = new JButton("Valider");
-	private JTextField textFieldApplication;
-	private JTextField textField;
+	private JTextField textFieldModifAppli;
+	private JTextField textFieldAjoutAppli;
 	public JPanel panelAjouter = new JPanel();
 	private final JButton btnAffModifierAppli = new JButton("Modifier");
+	private int idAppliSelec;
 	//private applicationArbre applicationArbre = new applicationArbre();
 	/**
 	 * Create the panel.
@@ -184,12 +186,17 @@ public class Parametres extends JPanel {
 		separator.setBounds(10, 22, 118, 8);
 		panelModifier.add(separator);
 		
-		textFieldApplication = new JTextField();
-		textFieldApplication.setBounds(9, 34, 118, 20);
-		panelModifier.add(textFieldApplication);
-		textFieldApplication.setColumns(10);
+		textFieldModifAppli = new JTextField();
+		textFieldModifAppli.setBounds(9, 34, 118, 20);
+		panelModifier.add(textFieldModifAppli);
+		textFieldModifAppli.setColumns(10);
 		btnModifier.setBounds(24, 60, 89, 23);
 		panelModifier.add(btnModifier);
+		
+
+		lbIdModifAppli.setBounds(10, 69, 9, 14);
+		lbIdModifAppli.setVisible(false);
+		panelModifier.add(lbIdModifAppli);
 		
 		
 		panelAjouter.setLayout(null);
@@ -209,11 +216,11 @@ public class Parametres extends JPanel {
 		separator_1.setBounds(10, 23, 118, 8);
 		panelAjouter.add(separator_1);
 		
-		textField = new JTextField();
-		textField.setBounds(9, 33, 118, 20);
+		textFieldAjoutAppli = new JTextField();
+		textFieldAjoutAppli.setBounds(9, 33, 118, 20);
 		
-		panelAjouter.add(textField);
-		textField.setColumns(10);
+		panelAjouter.add(textFieldAjoutAppli);
+		textFieldAjoutAppli.setColumns(10);
 		
 		
 		btnAjouterAppli.setBounds(24, 60, 89, 23);
@@ -250,8 +257,10 @@ public class Parametres extends JPanel {
 		btnNewAppli.addActionListener(list);
 		btnAjouterAppli.addActionListener(list);
 		btnAffModifierAppli.addActionListener(list);
-		
+		btnModifier.addActionListener(list);
 		tglbtnModifier.addActionListener(list);
+		
+
 	}
 	
 	private class MyButtonListener implements ActionListener{
@@ -284,7 +293,10 @@ public class Parametres extends JPanel {
 			}
 			
 			if(source == btnModifier){
-				controller.ControllerDB.ModifApplication(application);
+				
+				appli.setNomApplication(textFieldModifAppli.getText());
+				appli.setIdApplication(idAppliSelec);
+				controller.ControllerDB.ModifApplication(appli);
 				controller.gestionFenetre.eraseContainerPaneMainJFrame();
 				controller.gestionFenetre.configurationModif(false);
 				
@@ -295,7 +307,8 @@ public class Parametres extends JPanel {
 private void remplirApplication(String application){
 		
 		applicationArbre applicationArbre = ControllerDB.getApplicationArbre(application);
-		textFieldApplication.setText(applicationArbre.getNomApplication());
+		textFieldModifAppli.setText(applicationArbre.getNomApplication());
+		idAppliSelec=applicationArbre.getIdApplication();
 		
 	}
 }

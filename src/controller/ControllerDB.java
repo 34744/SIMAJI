@@ -37,6 +37,7 @@ import model.utilisateur;
 		
 		public static void ModifApplication(application application){
 			majData.MajApplication(application);
+			System.out.println(application.getIdApplication());
 		}
 	}
 	
