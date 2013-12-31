@@ -75,10 +75,11 @@ public class Connection extends JDialog {
 			}
 		}
 	private boolean verifConnection(){
-		if (textID.getText() != null && pass.getText() != null){
+	
+		/*if (textID.getText() != null && pass.getText() != null){
 			String nom = textID.getText();
 			user = ControllerDB.getUser(nom);
-			if (user.getNomUser() != null){
+			if (user.getNomUtilisateur()() != null){
 				if (user.getMdpUser().equals(pass.getText())){
 					return true;
 					}
@@ -95,7 +96,8 @@ public class Connection extends JDialog {
 		else{
 			JOptionPane.showMessageDialog(null,"Veuillez remplir les champs", "Champs non remplis",JOptionPane.ERROR_MESSAGE);
 			return false;
-			}
+			}*/
+		return false;
 		}
 	
 	public void clotApplication() {

@@ -4,11 +4,25 @@ public class application {
 
 	private int idApplication;
 	private String nomApplication;
+	private String visibiliteApplication;
 	
-	public application (int idApplication, String nomApplication){
+	public application (int idApplication, String nomApplication, String visibiliteApplication){
 		super();
 		this.idApplication=idApplication;
 		this.nomApplication=nomApplication;
+		this.visibiliteApplication=visibiliteApplication;
+	}
+
+	public String isVisibiliteApplication() {
+		return visibiliteApplication;
+	}
+
+	public void setVisibiliteApplication(String visibiliteApplication) {
+		this.visibiliteApplication = visibiliteApplication;
+	}
+
+	public String getVisibiliteApplication() {
+		return visibiliteApplication;
 	}
 
 	public application() {

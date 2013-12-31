@@ -4,18 +4,19 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-public class modelTableauApplication extends AbstractTableModel{
+public class applicationModelTableau extends AbstractTableModel{
 	
 	Vector<String> columnNames = new Vector<String>();
 	Vector<model.applicationArbre> contents = new Vector<model.applicationArbre>();
 	
-	public modelTableauApplication (Vector<model.applicationArbre> contents){
+	public applicationModelTableau (Vector<model.applicationArbre> contents){
 		setColumnNames();
 		setContents(contents);
 	}
 	
 	public void setColumnNames(){
 		columnNames.addElement("Nom");
+		columnNames.addElement ("Visibilité");
 	}
 	
 	@Override
@@ -40,6 +41,7 @@ public class modelTableauApplication extends AbstractTableModel{
 		switch (col){
 		
 		case 0: return a.getNomApplication();
+		case 1: return a.getVisibiliteApplication();
 		}
 		
 		return a;

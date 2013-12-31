@@ -18,10 +18,10 @@ public class getData {
 			ResultSet donnees = stat.executeQuery(requeteSQL);
 			ResultSetMetaData metadata = donnees.getMetaData();
 			while (donnees.next()) {
-				user.setCodeUser(donnees.getString("codeUser"));
-				user.setNomUser(donnees.getString("nomUser"));
-				user.setMdpUser(donnees.getString("mdpUser"));
-				user.setFonctionUser(donnees.getString("fonctionUser"));
+				user.setNumUlis(donnees.getString("numUlis"));
+				user.setNomUtilisateur(donnees.getString("nomUser"));
+				user.setPrenomUtilisateur(donnees.getString("prenomUser"));
+				user.setIdUtilisateur(donnees.getInt("idUser"));
 				}
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(null, e, "ERREUR",JOptionPane.ERROR_MESSAGE);
@@ -56,14 +56,15 @@ public class getData {
 		try{
 			Statement stat=controller.ControllerDB.connectionDB().createStatement();
 			
-			String requeteSQL = "SELECT * FROM application ORDER BY nomApplication";
+			String requeteSQL = "SELECT * FROM application ORDER BY visibiliteApplication, nomApplication";
 			ResultSet donnees = stat.executeQuery(requeteSQL);
 			ResultSetMetaData metadata = donnees.getMetaData();
 			
 			while (donnees.next()){
 				System.out.print(donnees.getString("nomApplication"));
 				v.addElement(new application(donnees.getInt("idApplication"),
-						donnees.getString("nomApplication")));
+						donnees.getString("nomApplication"),
+						donnees.getString("visibiliteApplication")));
 			}
 		}catch(SQLException e){
 			JOptionPane.showMessageDialog(null, e, "ERREUR", JOptionPane.ERROR_MESSAGE);
@@ -77,13 +78,14 @@ public class getData {
 		try{
 			Statement stat = controller.ControllerDB.connectionDB().createStatement();
 			
-			String requeteSQL = "SELECT * FROM application ORDER BY nomApplication";
+			String requeteSQL = "SELECT * FROM application ORDER BY visibiliteApplication, nomApplication";
 			ResultSet donnees = stat.executeQuery(requeteSQL);
 			ResultSetMetaData metadata = donnees.getMetaData();
 			
 			while(donnees.next()){
 				v.addElement(new applicationArbre(donnees.getInt("IdApplication"),
-												  donnees.getString("nomApplication")));
+												  donnees.getString("nomApplication"),
+												  donnees.getString("visibiliteApplication")));
 			}
 		}catch(SQLException e){
 			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
@@ -104,6 +106,78 @@ public class getData {
 			while(donnees.next()){
 				v.setIdApplication(donnees.getInt("IdApplication"));
 				v.setNomApplication(donnees.getString("nomApplication"));
+				v.setVisibiliteApplication(donnees.getString("visibiliteApplication"));
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static Vector<utilisateur> getUtilisateur(){
+		Vector<model.utilisateur> v = new Vector<model.utilisateur>();
+		
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+			
+			String requeteSQL = "SELECT * FROM utilisateur ORDER BY nomUtilisateur";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.addElement(new utilisateur(donnees.getInt("IdUtilisateur"),
+												  donnees.getString("nomUtilisateur"),
+												  donnees.getString("prenomUtilisateur"),
+												  donnees.getString("numUlis"),
+												  donnees.getString("mailUtilisateur")
+												  ));
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static Vector<utilisateurArbre> getUtilisateurArbre(){
+		Vector<model.utilisateurArbre> v = new Vector<model.utilisateurArbre>();
+		
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+			
+			String requeteSQL = "SELECT * FROM utilisateur ORDER BY nomUtilisateur";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.addElement(new utilisateurArbre(donnees.getInt("idUtilisateur"),
+												  donnees.getString("nomUtilisateur"),
+												  donnees.getString("prenomUtilisateur"),
+												  donnees.getString("numUlis"),
+												  donnees.getString("mailUtilisateur")
+												  ));
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static utilisateurArbre getUtilisateurArbre(String numUlis){
+		model.utilisateurArbre v = new model.utilisateurArbre();
+
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+
+			String requeteSQL = "SELECT * FROM utilisateur WHERE numUlis = '" + numUlis +"'";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.setIdUtilisateur(donnees.getInt("idUtilisateur"));
+				v.setNomUtilisateur(donnees.getString("nomUtilisateur"));
+				v.setPrenomUtilisateur(donnees.getString("prenomUtilisateur"));
+				v.setNumUlis(donnees.getString("numUlis"));
+				v.setMailUtilisateur(donnees.getString("mailUtilisateur"));
 			}
 		}catch(SQLException e){
 			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
@@ -143,7 +217,7 @@ public class getData {
 			ResultSetMetaData metadata = donnees.getMetaData();
 			
 			while(donnees.next()){
-				System.out.print(donnees.getString("nom"));
+				
 				v.addElement(new compoCellule(donnees.getInt("idCellule"),
 						donnees.getInt("idUtilisateur"),
 						donnees.getDate("dateDebutCellule"),

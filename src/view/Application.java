@@ -14,7 +14,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 
 import model.applicationArbre;
-import model.modelTableauApplication;
+import model.applicationModelTableau;
 
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -30,7 +30,7 @@ public class Application extends JPanel{
 	private JFrame frame;
 	private JTable table;
 	private Vector<model.applicationArbre> vectAppli = new Vector<model.applicationArbre>();
-	private modelTableauApplication modelAppli;
+	private applicationModelTableau modelAppli;
 	private JButton btnHome = new JButton("Accueil");
 	private JButton btnRapports = new JButton("Rapports");
 	private JButton btnSoftware = new JButton("Application");
@@ -47,7 +47,7 @@ public class Application extends JPanel{
 		
 		setBackground(new Color(176, 196, 222));
 		vectAppli = controller.ControllerDB.getApplicationArbre();
-		modelAppli = new modelTableauApplication(vectAppli);
+		modelAppli = new applicationModelTableau(vectAppli);
 		setLayout(null);
 		table = new JTable(modelAppli);
 		table.addMouseListener(new MouseAdapter() {

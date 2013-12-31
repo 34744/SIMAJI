@@ -10,6 +10,7 @@ import model.applicationArbre;
 import model.getData;
 import model.majData;
 import model.utilisateur;
+import model.utilisateurArbre;
 
 	public class ControllerDB {
 		public static Connection connectionDB() {
@@ -37,7 +38,20 @@ import model.utilisateur;
 		
 		public static void ModifApplication(application application){
 			majData.MajApplication(application);
-			System.out.println(application.getIdApplication());
+		}
+		
+		public static Vector<utilisateur> getUtilisateur(){
+			return model.getData.getUtilisateur();
+		}
+		
+		public static Vector<utilisateurArbre> getUtilisateurArbre(){
+			return model.getData.getUtilisateurArbre();
+		}
+		
+		public static utilisateurArbre getUtilisateurArbre(String numUlis){
+
+			return model.getData.getUtilisateurArbre(numUlis);
+			
 		}
 	}
 	

@@ -11,7 +11,10 @@ public class majData {
 		try{
 			Statement stat = controller.ControllerDB.connectionDB().createStatement();
 									 
-			String instructionSQL="UPDATE application SET nomApplication='"+application.getNomApplication()+"' WHERE idApplication='"+application.getIdApplication()+"' ";
+			String instructionSQL="UPDATE application SET nomApplication='"
+			+application.getNomApplication()+"', visibiliteApplication='"
+			+application.getVisibiliteApplication()+ "' WHERE idApplication='" 
+			+ application.getIdApplication()+"' ";
 			int nbIns = stat.executeUpdate(instructionSQL);
 			System.out.println("model");
 			System.out.println(application.getIdApplication());

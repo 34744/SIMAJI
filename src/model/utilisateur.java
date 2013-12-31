@@ -1,48 +1,60 @@
 package model;
 
 public class utilisateur {
-	private String codeUser, nomUser, mdpUser, fonctionUser;
-	public utilisateur(String codeUser, String nomUser, String mdpUser,String fonctionUser) {
+	private String nomUtilisateur, prenomUtilisateur, mailUtilisateur, numUlis;
+	private int idUtilisateur;
+	public utilisateur(int idUtilisateur, String nomUtilisateur, String prenomUtilisateur, String numUlis, String mailUtilisateur) {
 		super();
-		this.codeUser = codeUser;
-		this.nomUser = nomUser;
-		this.mdpUser = mdpUser;
-		this.fonctionUser = fonctionUser;
+		this.idUtilisateur = idUtilisateur;
+		this.nomUtilisateur = nomUtilisateur;
+		this.prenomUtilisateur = prenomUtilisateur;
+		this.numUlis=numUlis;
+		this.mailUtilisateur = mailUtilisateur;
 		}
 	
+	public String getNumUlis() {
+		return numUlis;
+	}
+
+	public void setNumUlis(String numUlis) {
+		this.numUlis = numUlis;
+	}
+
+	public String getNomUtilisateur() {
+		return nomUtilisateur;
+	}
+
+	public void setNomUtilisateur(String nomUtilisateur) {
+		this.nomUtilisateur = nomUtilisateur;
+	}
+
+	public String getPrenomUtilisateur() {
+		return prenomUtilisateur;
+	}
+
+	public void setPrenomUtilisateur(String prenomUtilisateur) {
+		this.prenomUtilisateur = prenomUtilisateur;
+	}
+
+	public String getMailUtilisateur() {
+		return mailUtilisateur;
+	}
+
+	public void setMailUtilisateur(String mailUtilisateur) {
+		this.mailUtilisateur = mailUtilisateur;
+	}
+
+	public int getIdUtilisateur() {
+		return idUtilisateur;
+	}
+
+	public void setIdUtilisateur(int idUtilisateur) {
+		this.idUtilisateur = idUtilisateur;
+	}
+
 	public utilisateur() {
 		super();
 		}
 	
-	public String getCodeUser() {
-		return codeUser;
-		}
 	
-	public void setCodeUser(String codeUser) {
-		this.codeUser = codeUser;
-		}
-	
-	public String getNomUser() {
-		return nomUser;
-		}
-	
-	public void setNomUser(String nomUser) {
-		this.nomUser = nomUser;
-		}
-	
-	public String getMdpUser() {
-		return mdpUser;
-		}
-	
-	public void setMdpUser(String mdpUser) {
-		this.mdpUser = mdpUser;
-		}
-	
-	public String getFonctionUser() {
-		return fonctionUser;
-		}
-	
-	public void setFonctionUser(String fonctionUser) {
-		this.fonctionUser = fonctionUser;
-		}
 	} 
