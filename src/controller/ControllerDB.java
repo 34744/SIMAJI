@@ -7,6 +7,10 @@ import java.util.Vector;
 import view.Application;
 import model.application;
 import model.applicationArbre;
+import model.compoCellule;
+import model.compoCelluleArbre;
+import model.direction;
+import model.directionArbre;
 import model.getData;
 import model.majData;
 import model.utilisateur;
@@ -49,9 +53,29 @@ import model.utilisateurArbre;
 		}
 		
 		public static utilisateurArbre getUtilisateurArbre(String numUlis){
-
 			return model.getData.getUtilisateurArbre(numUlis);
-			
+		}
+		
+		public static Vector<utilisateurArbre> getUtilisateurActifArbre(){
+			return model.getData.getUtilisateurActifArbre();
+		}
+		
+		public static Vector<direction> getDirectionUtilisateur(){
+			return model.getData.getDirection();
+
+		}
+		
+		public static Vector<directionArbre> getDirectionUtilisateurArbre(){
+			return model.getData.getDirectionArbre();
+		}
+		
+		public static Vector<compoCellule> getCompoCellule(){
+			return model.getData.getCompoCellule();
+
+		}
+		
+		public static Vector<compoCelluleArbre> getCompoCelluleArbre(){
+			return model.getData.getCompoCelluleArbre();
 		}
 	}
 	

@@ -3,8 +3,13 @@ package view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
@@ -27,6 +32,7 @@ import controller.ControllerDB;
 import model.application;
 import model.applicationArbre;
 import model.applicationModelTableau;
+import model.direction;
 import model.utilisateur;
 import model.utilisateurArbre;
 import model.utilisateurModelTableau;
@@ -49,6 +55,8 @@ import javax.swing.Box;
 import javax.swing.JScrollPane;
 
 import sun.swing.MenuItemLayoutHelper.ColumnAlignment;
+
+import javax.swing.JComboBox;
 
 class ComposantOnglet extends JPanel implements ActionListener {
 	  private JTabbedPane pane;
@@ -97,12 +105,21 @@ public class Parametres extends JPanel {
 	
 	/* 
 	 * ---------------------------------------------------------------------------------------------------
+	 * 									VARIABLES JTTABBEDPANE
+	 * ---------------------------------------------------------------------------------------------------
+	 * 
+	 */
+	JTabbedPane pane = new JTabbedPane(JTabbedPane.LEFT);
+	private int ongletSelectionne=0;
+	
+	/* 
+	 * ---------------------------------------------------------------------------------------------------
 	 * 									VARIABLES APPLICATION
 	 * ---------------------------------------------------------------------------------------------------
 	 * 
 	 */
-	
-	JLabel lblErreur = new JLabel("Veuillez compl\u00E9ter le champ manquant");
+	JPanel ongletAppli = new JPanel();
+	JLabel lblErreur = new JLabel("Veuillez compl\u00E9ter le champ manquant ou corriger le contenu!");
 	private JButton btnNewAppli = new JButton("Ajouter");
 	private JButton btnAjouterAppli = new JButton("Valider");
 	private JTable tableAppli;
@@ -123,9 +140,11 @@ public class Parametres extends JPanel {
 	 * ---------------------------------------------------------------------------------------------------
 	 * 
 	 */
-	
+	public boolean directionRempli=false;
+	JPanel ongletUtilisateur = new JPanel();
 	private JTable tableUtilisateur;
 	private Vector<model.utilisateurArbre> vectUtilisateur = new Vector<model.utilisateurArbre>();
+	private utilisateurArbre utilisateurActif = new utilisateurArbre();
 	private utilisateurModelTableau modelUtilisateur;
 	public utilisateur user = new utilisateur();
 	public String utilisateurSelectionne;
@@ -135,6 +154,24 @@ public class Parametres extends JPanel {
 	private JTextField textFieldPrenomUtilisateur;
 	private JTextField textFieldUlisUtilisateur;
 	private JTextField textFieldAdresseMail;
+	private JComboBox<String> comboBoxDirectionUtilisateur = new JComboBox<String>();
+	private JCheckBox chckbxUtilisateurActif = new JCheckBox("Actif uniquement");
+	private JCheckBox chckbxActifUtilisateur = new JCheckBox("Actif");
+	private JTextField textFieldDgUtilisateur;
+	private JTextField textFieldDirectionUtilisateur;
+	private JButton btnModifierUtilisateur = new JButton("Modifier");
+	private String directionUtilisateurSelectionne;
+	private model.directionArbre directionArbre= new model.directionArbre();
+	private JButton btnAjouterUtilisateur = new JButton("");
+	private JButton btnValiderAjoutUtilisateur = new JButton("Valider");
+	
+	/* 
+	 * ---------------------------------------------------------------------------------------------------
+	 * 									VARIABLES DIRECTION
+	 * ---------------------------------------------------------------------------------------------------
+	 * 
+	 */
+	private Vector<direction> vectDirection = new Vector<model.direction>();
 
 	/* 
 	 * ---------------------------------------------------------------------------------------------------
@@ -227,7 +264,7 @@ public class Parametres extends JPanel {
 		 * ---------------------------------------------------------------------------------------------------
 		 * 
 		 */		
-		JTabbedPane pane = new JTabbedPane(JTabbedPane.LEFT);
+
 		pane.setBounds(22, 102, 746, 380);
 		add(pane);
 		
@@ -241,7 +278,7 @@ public class Parametres extends JPanel {
 		
 
 		
-		JPanel ongletAppli = new JPanel();
+
 		ongletAppli.setLayout(null);
 		
 		vectAppli = controller.ControllerDB.getApplicationArbre();
@@ -276,7 +313,6 @@ public class Parametres extends JPanel {
 		ongletAppli.add(scrollPaneAppli);
 		
 		pane.addTab("Applications", ongletAppli);
-		lblErreur.setVisible(false);
 		JPanel panelModifier = new JPanel();
 		panelModifier.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panelModifier.setBounds(302, 83, 200, 128);
@@ -365,11 +401,6 @@ public class Parametres extends JPanel {
 		
 		ongletAppli.add(btnAffModifierAppli);
 		
-
-		lblErreur.setForeground(Color.RED);
-		lblErreur.setBounds(31, 336, 271, 14);
-		ongletAppli.add(lblErreur);
-		
 		if(ajout == false){
 			panelAjouter.setVisible(false);
 			panelModifier.setVisible(true);
@@ -390,9 +421,9 @@ public class Parametres extends JPanel {
 		 * ---------------------------------------------------------------------------------------------------
 		 * 
 		 */
-		JPanel ongletUtilisateur = new JPanel();
+
 		ongletUtilisateur.setLayout(null);
-		
+
 		vectUtilisateur = controller.ControllerDB.getUtilisateurArbre();
 		modelUtilisateur = new utilisateurModelTableau(vectUtilisateur);
 		tableUtilisateur = new JTable(modelUtilisateur);
@@ -403,6 +434,8 @@ public class Parametres extends JPanel {
 				if(tableUtilisateur.getSelectedRow()!=-1){
 					utilisateurSelectionne=tableUtilisateur.getValueAt(tableUtilisateur.getSelectedRow(), 2).toString();
 					remplirUtilisateur(tableUtilisateur.getValueAt(tableUtilisateur.getSelectedRow(),0).toString());
+					btnModifierUtilisateur.setVisible(true);
+					btnValiderAjoutUtilisateur.setVisible(false);
 				}
 			}
 		});
@@ -416,8 +449,11 @@ public class Parametres extends JPanel {
 		tableUtilisateur.setBounds(7, 40, 95, 128);
 		tableUtilisateur.getColumnModel().getColumn(0).setPreferredWidth(75);
 		tableUtilisateur.getColumnModel().getColumn(1).setPreferredWidth(60);
-		tableUtilisateur.getColumnModel().getColumn(2).setPreferredWidth(15);
+		tableUtilisateur.getColumnModel().getColumn(2).setPreferredWidth(25);
 		tableUtilisateur.getColumnModel().getColumn(3).setPreferredWidth(190);
+		tableUtilisateur.setAutoCreateRowSorter(true);
+		tableUtilisateur.getRowSorter().toggleSortOrder(0);
+		tableUtilisateur.setAutoCreateRowSorter(false);
 		JScrollPane scrollPaneUtilisateur = new JScrollPane(tableUtilisateur);
 		scrollPaneUtilisateur.setVisible(true);
 		scrollPaneUtilisateur.setBounds(10, 11, 600, 105);
@@ -428,105 +464,162 @@ public class Parametres extends JPanel {
 		
 		JPanel panelModifierUtilisateur = new JPanel();
 		panelModifierUtilisateur.setBorder(new LineBorder(SystemColor.inactiveCaption));
-		panelModifierUtilisateur.setBounds(10, 139, 242, 182);
+		panelModifierUtilisateur.setBounds(10, 139, 329, 182);
 		ongletUtilisateur.add(panelModifierUtilisateur);
 		panelModifierUtilisateur.setLayout(null);
 		
 		textFieldPrenomUtilisateur = new JTextField();
 		textFieldPrenomUtilisateur.setText("Pr\u00E9nom");
-		textFieldPrenomUtilisateur.setBounds(10, 51, 126, 20);
+		textFieldPrenomUtilisateur.setBounds(176, 51, 143, 20);
 		textFieldPrenomUtilisateur.setColumns(10);
+		textFieldPrenomUtilisateur.addFocusListener(new FocusAdapter(){
+			public void focusGained(FocusEvent e){
+				if(btnValiderAjoutUtilisateur.isVisible()==true && comboBoxDirectionUtilisateur.getSelectedIndex()==0){
+					textFieldPrenomUtilisateur.setText("");
+				}
+			}
+		});
 		panelModifierUtilisateur.add(textFieldPrenomUtilisateur);
+		
 		
 		textFieldNomUtilisateur = new JTextField();
 		textFieldNomUtilisateur.setText("Nom");
-		textFieldNomUtilisateur.setBounds(10, 20, 126, 20);
+		textFieldNomUtilisateur.setBounds(10, 51, 156, 20);
 		panelModifierUtilisateur.add(textFieldNomUtilisateur);
 		textFieldNomUtilisateur.setColumns(10);
-		
+		textFieldNomUtilisateur.addFocusListener(new FocusAdapter(){
+			public void focusGained(FocusEvent e){
+				if(btnValiderAjoutUtilisateur.isVisible()==true && comboBoxDirectionUtilisateur.getSelectedIndex()==0){
+					textFieldNomUtilisateur.setText("");
+				}
+			}
+		});
 		textFieldUlisUtilisateur = new JTextField();
 		textFieldUlisUtilisateur.setText("n\u00B0Ulis");
 		textFieldUlisUtilisateur.setColumns(10);
-		textFieldUlisUtilisateur.setBounds(10, 82, 70, 20);
+		textFieldUlisUtilisateur.setBounds(10, 20, 70, 20);
 		panelModifierUtilisateur.add(textFieldUlisUtilisateur);
 		
 		textFieldAdresseMail = new JTextField();
 		textFieldAdresseMail.setText("Adresse Mail");
-		textFieldAdresseMail.setBounds(10, 113, 222, 20);
+		textFieldAdresseMail.setBounds(10, 113, 309, 20);
 		panelModifierUtilisateur.add(textFieldAdresseMail);
 		textFieldAdresseMail.setColumns(10);
-		
-		JCheckBox chckbxActifUtilisateur = new JCheckBox("Actif");
-		chckbxActifUtilisateur.setBounds(10, 140, 97, 23);
+		textFieldAdresseMail.addFocusListener(new FocusAdapter(){
+			public void focusGained(FocusEvent e){
+				if(btnValiderAjoutUtilisateur.isVisible()==true){
+					textFieldAdresseMail.setText("");
+				}
+			}
+		});
+
+		chckbxActifUtilisateur.setBounds(222, 17, 97, 23);
 		panelModifierUtilisateur.add(chckbxActifUtilisateur);
+		
+		textFieldDgUtilisateur = new JTextField();
+		textFieldDgUtilisateur.setText("Direction g\u00E9n\u00E9rale");
+		textFieldDgUtilisateur.setBounds(10, 82, 126, 20);
+		panelModifierUtilisateur.add(textFieldDgUtilisateur);
+		textFieldDgUtilisateur.setColumns(10);
+		textFieldDgUtilisateur.setEnabled(false);
+		
+		
+		comboBoxDirectionUtilisateur.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		comboBoxDirectionUtilisateur.setBounds(146, 82, 173, 20);
+		panelModifierUtilisateur.add(comboBoxDirectionUtilisateur);
+		textFieldDirectionUtilisateur=new JTextField();
+		textFieldDirectionUtilisateur.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		textFieldDirectionUtilisateur.setEnabled(false);
+		textFieldDirectionUtilisateur.setColumns(10);
+		textFieldDirectionUtilisateur.setBounds(146, 82, 156, 20);
+		
+		panelModifierUtilisateur.add(textFieldDirectionUtilisateur);
+		maDirection itemListener = new maDirection();
+		comboBoxDirectionUtilisateur.addItemListener(itemListener);	
 		
 		JPanel panelUtilisateurCellule = new JPanel();
 		panelUtilisateurCellule.setBorder(new LineBorder(SystemColor.inactiveCaption));
-		panelUtilisateurCellule.setBounds(289, 139, 198, 182);
+		panelUtilisateurCellule.setBounds(349, 139, 198, 182);
 		ongletUtilisateur.add(panelUtilisateurCellule);
 		panelUtilisateurCellule.setLayout(null);
 		
 		JButton btnCelluleAjouter = new JButton("Ajouter");
-		btnCelluleAjouter.setBounds(497, 160, 89, 23);
+		btnCelluleAjouter.setBounds(557, 160, 89, 23);
 		ongletUtilisateur.add(btnCelluleAjouter);
 		
 		JButton btnCelluleModifier = new JButton("Modifier");
-		btnCelluleModifier.setBounds(497, 195, 89, 23);
+		btnCelluleModifier.setBounds(557, 194, 89, 23);
 		ongletUtilisateur.add(btnCelluleModifier);
 		
 		JCheckBox chckbxActiveOnly = new JCheckBox("Cellules Actives Uniquement");
-		chckbxActiveOnly.setBounds(289, 332, 218, 23);
+		chckbxActiveOnly.setBounds(349, 332, 218, 23);
 		ongletUtilisateur.add(chckbxActiveOnly);
 		
-		JButton btnModifierUtilisateur = new JButton("Modifier");
+
 		btnModifierUtilisateur.setBounds(10, 332, 89, 23);
 		ongletUtilisateur.add(btnModifierUtilisateur);
 		
-		JCheckBox chckbxUtilisateurActif = new JCheckBox("Actif uniquement");
+
 		chckbxUtilisateurActif.setBounds(493, 117, 142, 23);
 		ongletUtilisateur.add(chckbxUtilisateurActif);
 		
-		JButton btnAjouterUtilisateur = new JButton("");
 		btnAjouterUtilisateur.setBounds(615, 57, 20, 23);
 		ongletUtilisateur.add(btnAjouterUtilisateur);
 		btnAjouterUtilisateur.setIcon(new ImageIcon(Parametres.class.getResource("/icones/ins\u00E9rer40.png")));
 		
+
+		btnValiderAjoutUtilisateur.setBounds(140, 332, 89, 23);
+		ongletUtilisateur.add(btnValiderAjoutUtilisateur);
+		lblErreur.setBounds(123, 496, 416, 14);
+		add(lblErreur);
+		lblErreur.setVisible(false);
+		
+
+		lblErreur.setForeground(Color.RED);
+		btnValiderAjoutUtilisateur.setVisible(false);
+		
 		/* 
 		 * ---------------------------------------------------------------------------------------------------
-		 * 									DEBUT PANEL CELLULE
+		 * 									DEBUT PANEL COMPOCELLULE DANS UTILISATEUR
 		 * ---------------------------------------------------------------------------------------------------
 		 * 
 		 */
-		/*
-		vectAppli = controller.ControllerDB.getApplicationArbre();
-		modelAppli = new applicationModelTableau(vectAppli);
-		tableAppli = new JTable(modelAppli);
-		tableAppli.addMouseListener(new MouseAdapter() {
+		
+		vectUtilisateur = controller.ControllerDB.getUtilisateurArbre();
+		modelUtilisateur = new utilisateurModelTableau(vectUtilisateur);
+		tableUtilisateur = new JTable(modelUtilisateur);
+		tableUtilisateur.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				Object source = arg0.getSource();
-				if(tableAppli.getSelectedRow()!=-1){
-					remplirApplication(tableAppli.getValueAt(tableAppli.getSelectedRow(),0).toString());
-					
+				if(tableUtilisateur.getSelectedRow()!=-1){
+					utilisateurSelectionne=tableUtilisateur.getValueAt(tableUtilisateur.getSelectedRow(), 2).toString();
+					remplirUtilisateur(tableUtilisateur.getValueAt(tableUtilisateur.getSelectedRow(),0).toString());
+					btnModifierUtilisateur.setVisible(true);
+					btnValiderAjoutUtilisateur.setVisible(false);
 				}
 			}
 		});
-		tableAppli.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tableAppli.setColumnSelectionAllowed(true);
-		tableAppli.setToolTipText("S\u00E9lectionnez l'application d\u00E9sir\u00E9e");
-		tableAppli.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE));
-		tableAppli.setForeground(Color.WHITE);
-		tableAppli.setFont(new Font("Tahoma", Font.BOLD, 14));
-		tableAppli.setBackground(new Color(211, 211, 211));
-		tableAppli.setBounds(7, 40, 95, 128);
+		tableUtilisateur.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tableUtilisateur.setColumnSelectionAllowed(true);
+		tableUtilisateur.setToolTipText("S\u00E9lectionnez l'utilisateur d\u00E9sir\u00E9");
+		tableUtilisateur.setBorder(new BevelBorder(BevelBorder.LOWERED, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE));
+		tableUtilisateur.setForeground(Color.WHITE);
+		tableUtilisateur.setFont(new Font("Tahoma", Font.BOLD, 13));
+		tableUtilisateur.setBackground(new Color(211, 211, 211));
+		tableUtilisateur.setBounds(7, 40, 95, 128);
+		tableUtilisateur.getColumnModel().getColumn(0).setPreferredWidth(75);
+		tableUtilisateur.getColumnModel().getColumn(1).setPreferredWidth(60);
+		tableUtilisateur.getColumnModel().getColumn(2).setPreferredWidth(25);
+		tableUtilisateur.getColumnModel().getColumn(3).setPreferredWidth(190);
+		tableUtilisateur.setAutoCreateRowSorter(true);
+		tableUtilisateur.getRowSorter().toggleSortOrder(0);
+		tableUtilisateur.setAutoCreateRowSorter(false);
+		JScrollPane scrollPaneCompoCellule = new JScrollPane(tableUtilisateur);
+		scrollPaneCompoCellule.setVisible(true);
+		scrollPaneCompoCellule.setBounds(10, 11, 600, 105);
+		panelUtilisateurCellule.add(scrollPaneCompoCellule);
 		
-		
-		JPanel ongletCellule = new JPanel();
-		ongletCellule.setLayout(null);
-		ongletCellule.setPreferredSize(new Dimension(300, 80));
-		//ongletCellule.add(tableCellule);
-		pane.addTab("Cellule", ongletCellule);
-		*/
 		/* 
 		 * ---------------------------------------------------------------------------------------------------
 		 * 									DEBUT LISTENER BOUTON
@@ -544,16 +637,45 @@ public class Parametres extends JPanel {
 		btnAjouterAppli.addActionListener(list);
 		btnAffModifierAppli.addActionListener(list);
 		btnModifier.addActionListener(list);
+		chckbxUtilisateurActif.addActionListener(list);
 		tglbtnModifier.addActionListener(list);
+		comboBoxDirectionUtilisateur.addActionListener(list);
+		btnModifierUtilisateur.addActionListener(list);
+		btnAjouterUtilisateur.addActionListener(list);
+		btnValiderAjoutUtilisateur.addActionListener(list);
+		remplirDirection();
 		
+	}
+	private void remplirDirection(){
+		comboBoxDirectionUtilisateur.removeAllItems();
+		vectDirection = controller.ControllerDB.getDirectionUtilisateur();
+		comboBoxDirectionUtilisateur.addItem("--Sélectionnez Direction--");
+		for(int i=0; i<this.vectDirection.size();i++){
+			comboBoxDirectionUtilisateur.addItem(vectDirection.elementAt(i).getNomDirection());
+		}
+		
+	}
+	private class maDirection implements ItemListener{
 
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			// TODO Auto-generated method stub
+			//remplirDirection();
+		}
+
+		
 	}
 	
 	private class MyButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			
 			Object source = e.getSource();
-			
+			/* 
+			 * ---------------------------------------------------------------------------------------------------
+			 * 									DEBUT BOUTON NAVIGATION
+			 * ---------------------------------------------------------------------------------------------------
+			 * 
+			 */
 			if(source == btnHome){
 				controller.gestionFenetre.eraseContainerPaneMainJFrame();
 				controller.gestionFenetre.accueil();
@@ -564,6 +686,12 @@ public class Parametres extends JPanel {
 				controller.gestionFenetre.application();
 			}
 			
+			/* 
+			 * ---------------------------------------------------------------------------------------------------
+			 * 									DEBUT BOUTON APPLI
+			 * ---------------------------------------------------------------------------------------------------
+			 * 
+			 */
 			if(source == btnNewAppli){
 				
 				controller.gestionFenetre.eraseContainerPaneMainJFrame();
@@ -628,11 +756,168 @@ public class Parametres extends JPanel {
 					textFieldAjoutAppli.requestFocus();
 			
 				}
-				/*appli.setNomApplication(textFieldAjoutAppli.getText());
-				appli.setVisibiliteApplication("");
-				controller.addData.addApplication(appli);
-				controller.gestionFenetre.eraseContainerPaneMainJFrame();
-				controller.gestionFenetre.configurationModif(true);*/
+				
+			}
+			/* 
+			 * ---------------------------------------------------------------------------------------------------
+			 * 									DEBUT BOUTON UTILISATEUR
+			 * ---------------------------------------------------------------------------------------------------
+			 * 
+			 */
+			if(source==chckbxUtilisateurActif){
+				
+				if(chckbxUtilisateurActif.isSelected()){
+					vectUtilisateur=controller.ControllerDB.getUtilisateurActifArbre();	
+					
+					}
+					else
+					{
+					vectUtilisateur = controller.ControllerDB.getUtilisateurArbre();
+					
+					}
+				/*controller.gestionFenetre.eraseContainerPaneMainJFrame();
+				pane.setSelectedIndex(1);
+				controller.gestionFenetre.configurationModif(true);	*/
+
+			}
+			
+			if(source==comboBoxDirectionUtilisateur){
+				//remplirDirection();
+				textFieldDirectionUtilisateur.setText(comboBoxDirectionUtilisateur.getSelectedItem().toString());
+				textFieldDgUtilisateur.setText("");
+			}
+			
+			if(source==btnModifierUtilisateur){
+				if(textFieldDirectionUtilisateur.getText()!=""){
+					comboBoxDirectionUtilisateur.setSelectedItem(textFieldDirectionUtilisateur.getText());
+				}
+				directionUtilisateurSelectionne=comboBoxDirectionUtilisateur.getSelectedItem().toString();
+				
+				user.setUtilisateurDirection(model.getData.getDirectionArbre(directionUtilisateurSelectionne).getIdDirection());
+				user.setMailUtilisateur(textFieldAdresseMail.getText());
+				user.setIdUtilisateur(utilisateurActif.getIdUtilisateur());
+				if(chckbxActifUtilisateur.isSelected()){
+					user.setActifUtilisateur("");
+				}
+				else
+				{
+					user.setActifUtilisateur("Inactif");
+				}
+				
+				if(textFieldUlisUtilisateur.getText()!= null && textFieldUlisUtilisateur.getText().length()>0 ){
+					user.setNumUlis(textFieldUlisUtilisateur.getText());
+					
+					if(textFieldNomUtilisateur.getText()!= null && textFieldNomUtilisateur.getText().length()>0 ){
+						user.setNomUtilisateur(textFieldNomUtilisateur.getText());
+						
+						if(textFieldPrenomUtilisateur.getText()!= null && textFieldPrenomUtilisateur.getText().length()>0 ){
+							user.setPrenomUtilisateur(textFieldPrenomUtilisateur.getText());
+							
+							if(textFieldAdresseMail.getText()!= null && textFieldAdresseMail.getText().length()>0 ){
+								user.setMailUtilisateur(textFieldAdresseMail.getText());
+								model.majData.MajUtilisateur(user);
+								controller.gestionFenetre.eraseContainerPaneMainJFrame();
+								controller.gestionFenetre.configurationModif(true);	
+								pane.setSelectedIndex(1);
+							}
+							else{
+								lblErreur.setVisible(true);
+								textFieldAdresseMail.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+							}
+							
+						}
+						else{
+							lblErreur.setVisible(true);
+							textFieldPrenomUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+						}
+					}
+					else{
+						lblErreur.setVisible(true);
+						textFieldNomUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+					}
+				}
+				else{
+					lblErreur.setVisible(true);
+					textFieldUlisUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+				}
+				
+				
+				
+				
+			}
+			if(source==btnAjouterUtilisateur){
+				textFieldNomUtilisateur.setText("Nom");
+				textFieldUlisUtilisateur.requestFocus();
+				textFieldPrenomUtilisateur.setText("Prenom");
+				textFieldUlisUtilisateur.setText("");
+				textFieldAdresseMail.setText("Adresse Mail");
+				textFieldDgUtilisateur.setText("Direction générale");
+				chckbxActifUtilisateur.setSelected(true);
+				btnValiderAjoutUtilisateur.setVisible(true);
+				btnModifierUtilisateur.setVisible(false);
+			}
+			if(source == btnValiderAjoutUtilisateur){
+				if(chckbxActifUtilisateur.isSelected()){
+					user.setActifUtilisateur("");
+				}
+				else
+				{
+					user.setActifUtilisateur("Inactif");
+				}
+				if(textFieldUlisUtilisateur.getText()!= null && textFieldUlisUtilisateur.getText().length()>0 && textFieldUlisUtilisateur.getText().length()<=6){
+					user.setNumUlis(textFieldUlisUtilisateur.getText());
+					textFieldUlisUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(0,0,0)));
+					
+					if(textFieldNomUtilisateur.getText()!= null && textFieldNomUtilisateur.getText().length()>0 ){
+						user.setNomUtilisateur(textFieldNomUtilisateur.getText());
+						textFieldNomUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(0,0,0)));
+						
+						if(textFieldPrenomUtilisateur.getText()!= null && textFieldPrenomUtilisateur.getText().length()>0 ){
+							user.setPrenomUtilisateur(textFieldPrenomUtilisateur.getText());
+							textFieldPrenomUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(0,0,0)));
+							
+							if(comboBoxDirectionUtilisateur.getSelectedItem()!="--Sélectionnez Direction--"){
+								comboBoxDirectionUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(0,0,0)));
+								directionUtilisateurSelectionne=comboBoxDirectionUtilisateur.getSelectedItem().toString();
+								user.setUtilisateurDirection(model.getData.getDirectionArbre(directionUtilisateurSelectionne).getIdDirection());
+								
+								if(textFieldAdresseMail.getText()!= null && textFieldAdresseMail.getText().length()>0 ){
+								user.setMailUtilisateur(textFieldAdresseMail.getText());
+								
+								controller.addData.addUtilisateur(user);
+								controller.gestionFenetre.eraseContainerPaneMainJFrame();
+								controller.gestionFenetre.configurationModif(true);	
+								pane.setSelectedIndex(1);
+								}
+								else
+								{
+									lblErreur.setVisible(true);
+									comboBoxDirectionUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+								}
+									
+							}
+							else{
+								lblErreur.setVisible(true);
+								textFieldAdresseMail.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+							}
+							
+						}
+						else{
+							lblErreur.setVisible(true);
+							textFieldPrenomUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+						}
+					}
+					else{
+						lblErreur.setVisible(true);
+						textFieldNomUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+					}
+				}
+				else{
+					lblErreur.setVisible(true);
+					textFieldUlisUtilisateur.setBorder(BorderFactory.createLineBorder(new Color(255,0,0)));
+				}
+
+				pane.setSelectedIndex(1);
 			}
 		}
 	}
@@ -659,14 +944,30 @@ private void remplirApplication(String application){
 private void remplirUtilisateur(String numUtilisateur){
 	numUtilisateur=utilisateurSelectionne;
 	utilisateurArbre utilisateurArbre = ControllerDB.getUtilisateurArbre(numUtilisateur);
-	
 	textFieldNomUtilisateur.setText(utilisateurArbre.getNomUtilisateur());
 	textFieldPrenomUtilisateur.setText(utilisateurArbre.getPrenomUtilisateur());
 	textFieldUlisUtilisateur.setText(utilisateurArbre.getNumUlis());
 	textFieldAdresseMail.setText(utilisateurArbre.getMailUtilisateur());
-	//idAppliSelec=applicationArbre.getIdApplication();
-	
-}
+	textFieldDgUtilisateur.setText(utilisateurArbre.getUtilisateurDG());
+	if(utilisateurArbre.getUtilisateurActif().equals("Inactif")){
+		chckbxActifUtilisateur.setSelected(false);
+	}
+	else{
+		chckbxActifUtilisateur.setSelected(true);
+	}
+	//comboBoxDirectionUtilisateur.removeAllItems();
+	//comboBoxDirectionUtilisateur.addItem(utilisateurArbre.getUtilisateurDirection().toString());
+	textFieldDirectionUtilisateur.setText(utilisateurArbre.getUtilisateurDirection());
+ }
+
+public void getVectDirection(){
+	comboBoxDirectionUtilisateur.removeAllItems();
+	vectDirection=controller.ControllerDB.getDirectionUtilisateur();
+	for (int i=0; i<this.vectDirection.size();i++){
+		comboBoxDirectionUtilisateur.addItem(vectDirection.elementAt(i).getNomDirection());
+		}
+
+	}
 }
 
 

@@ -1,17 +1,51 @@
 package model;
 
 public class utilisateur {
-	private String nomUtilisateur, prenomUtilisateur, mailUtilisateur, numUlis;
-	private int idUtilisateur;
-	public utilisateur(int idUtilisateur, String nomUtilisateur, String prenomUtilisateur, String numUlis, String mailUtilisateur) {
+	private String nomUtilisateur, prenomUtilisateur, mailUtilisateur, numUlis, actifUtilisateur,  utilisateurDG;
+	private int idUtilisateur, utilisateurDirection;
+	public utilisateur(int idUtilisateur, String nomUtilisateur, String prenomUtilisateur, String numUlis, String mailUtilisateur, String actifUtilisateur, int utilisateurDirection, String utilisateurDG) {
 		super();
 		this.idUtilisateur = idUtilisateur;
 		this.nomUtilisateur = nomUtilisateur;
 		this.prenomUtilisateur = prenomUtilisateur;
 		this.numUlis=numUlis;
 		this.mailUtilisateur = mailUtilisateur;
+		this.actifUtilisateur=actifUtilisateur;
+		this.utilisateurDirection=utilisateurDirection;
 		}
 	
+
+
+	public int getUtilisateurDirection() {
+		return utilisateurDirection;
+	}
+
+
+
+	public void setUtilisateurDirection(int utilisateurDirection) {
+		this.utilisateurDirection = utilisateurDirection;
+	}
+
+
+
+	public String getUtilisateurDG() {
+		return utilisateurDG;
+	}
+
+
+	public void setUtilisateurDG(String utilisateurDG) {
+		this.utilisateurDG = utilisateurDG;
+	}
+
+
+	public String getActifUtilisateur() {
+		return actifUtilisateur;
+	}
+
+	public void setActifUtilisateur(String actifUtilisateur) {
+		this.actifUtilisateur = actifUtilisateur;
+	}
+
 	public String getNumUlis() {
 		return numUlis;
 	}

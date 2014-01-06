@@ -120,7 +120,7 @@ public class getData {
 		try{
 			Statement stat = controller.ControllerDB.connectionDB().createStatement();
 			
-			String requeteSQL = "SELECT * FROM utilisateur ORDER BY nomUtilisateur";
+			String requeteSQL = "SELECT DISTINCT * FROM utilisateur, direction, directiongeneral WHERE utilisateur.directionUtilisateur=direction.idDirection AND direction.idDG = directiongeneral.idDG ORDER BY nomUtilisateur";
 			ResultSet donnees = stat.executeQuery(requeteSQL);
 			ResultSetMetaData metadata = donnees.getMetaData();
 			
@@ -129,7 +129,10 @@ public class getData {
 												  donnees.getString("nomUtilisateur"),
 												  donnees.getString("prenomUtilisateur"),
 												  donnees.getString("numUlis"),
-												  donnees.getString("mailUtilisateur")
+												  donnees.getString("mailUtilisateur"),
+												  donnees.getString ("utilisateurActif"),
+												  donnees.getInt("nomDirection"),
+												  donnees.getString("nomDG")
 												  ));
 			}
 		}catch(SQLException e){
@@ -144,7 +147,7 @@ public class getData {
 		try{
 			Statement stat = controller.ControllerDB.connectionDB().createStatement();
 			
-			String requeteSQL = "SELECT * FROM utilisateur ORDER BY nomUtilisateur";
+			String requeteSQL = "SELECT DISTINCT * FROM utilisateur, direction, directiongeneral WHERE utilisateur.directionUtilisateur=direction.idDirection AND direction.idDG = directiongeneral.idDG ORDER BY nomUtilisateur";
 			ResultSet donnees = stat.executeQuery(requeteSQL);
 			ResultSetMetaData metadata = donnees.getMetaData();
 			
@@ -153,7 +156,10 @@ public class getData {
 												  donnees.getString("nomUtilisateur"),
 												  donnees.getString("prenomUtilisateur"),
 												  donnees.getString("numUlis"),
-												  donnees.getString("mailUtilisateur")
+												  donnees.getString("mailUtilisateur"),
+												  donnees.getString("utilisateurActif"),
+												  donnees.getString("nomDirection"),
+												  donnees.getString("nomDG")
 												  ));
 			}
 		}catch(SQLException e){
@@ -168,7 +174,7 @@ public class getData {
 		try{
 			Statement stat = controller.ControllerDB.connectionDB().createStatement();
 
-			String requeteSQL = "SELECT * FROM utilisateur WHERE numUlis = '" + numUlis +"'";
+			String requeteSQL = "SELECT * FROM utilisateur,direction,directiongeneral WHERE utilisateur.directionUtilisateur=direction.idDirection AND direction.idDG = directiongeneral.idDG and numUlis = '" + numUlis +"'";
 			ResultSet donnees = stat.executeQuery(requeteSQL);
 			ResultSetMetaData metadata = donnees.getMetaData();
 			
@@ -178,6 +184,9 @@ public class getData {
 				v.setPrenomUtilisateur(donnees.getString("prenomUtilisateur"));
 				v.setNumUlis(donnees.getString("numUlis"));
 				v.setMailUtilisateur(donnees.getString("mailUtilisateur"));
+				v.setUtilisateurActif(donnees.getString("utilisateurActif"));
+				v.setUtilisateurDirection(donnees.getString("nomDirection"));
+				v.setUtilisateurDG(donnees.getString("nomDG"));
 			}
 		}catch(SQLException e){
 			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
@@ -185,6 +194,99 @@ public class getData {
 		return v;
 	}
 	
+	public static Vector<utilisateurArbre> getUtilisateurActifArbre(){
+		Vector<model.utilisateurArbre> v = new Vector<model.utilisateurArbre>();
+		
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+			
+			String requeteSQL = "SELECT * FROM utilisateur,direction, directiongeneral WHERE utilisateur.directionUtilisateur=direction.idDirection AND direction.idDG = directiongeneral.idDG AND utilisateurActif !='Inactif' ORDER BY nomUtilisateur";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.addElement(new utilisateurArbre(donnees.getInt("idUtilisateur"),
+												  donnees.getString("nomUtilisateur"),
+												  donnees.getString("prenomUtilisateur"),
+												  donnees.getString("numUlis"),
+												  donnees.getString("mailUtilisateur"),
+												  donnees.getString("utilisateurActif"),
+												  donnees.getString("nomDirection"),
+												  donnees.getString("nomDG")
+												  ));
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static Vector<direction> getDirection(){
+		Vector<model.direction> v = new Vector<model.direction>();
+		System.out.println("direction");
+		
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+			
+			String requeteSQL = "SELECT * FROM direction ORDER BY idDG";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.addElement(new direction(donnees.getInt("idDirection"),
+												  donnees.getString("nomDirection"),
+												  donnees.getInt("idDG")
+												  ));
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static Vector<directionArbre> getDirectionArbre(){
+		Vector<model.directionArbre> v = new Vector<model.directionArbre>();
+		
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+			
+			String requeteSQL = "SELECT  * FROM  direction ORDER BY idDG";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.addElement(new directionArbre(donnees.getInt("idDirection"),
+												  donnees.getString("nomDirection"),
+												  donnees.getInt("idDG")
+												  ));
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static directionArbre getDirectionArbre(String nomDirection){
+		model.directionArbre v = new model.directionArbre();
+
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+
+			String requeteSQL = "SELECT * FROM direction WHERE nomDirection = '" + nomDirection +"'";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				v.setIdDirection(donnees.getInt("idDirection"));
+				v.setNomDirection(donnees.getString("nomDirection"));
+				v.setIdDG(donnees.getInt("idDG"));
+				
+			}
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
 	public static Vector<cellule> getCellule(){
 		Vector<model.cellule> v = new Vector<model.cellule>();
 		
@@ -223,6 +325,78 @@ public class getData {
 						donnees.getDate("dateDebutCellule"),
 						donnees.getDate("dateFinCellule")));
 			}
+			
+		} catch (SQLException e){
+			JOptionPane.showMessageDialog(null, e,"Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static compoCelluleArbre getCompoCelluleArbre(int idUtilisateur){
+		model.compoCelluleArbre v = new model.compoCelluleArbre();
+
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+
+			String requeteSQL = "SELECT * FROM `compocellule`, cellule, utilisateur where compocellule.idUtilisateur = '" + idUtilisateur +"'";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				
+				v.setFkCellule(donnees.getInt("idCellule"));
+				v.setFkUtilisateur(donnees.getInt("idUtilisateur"));
+				v.setDateDebutCellule(donnees.getDate("DateDebutCellule"));
+				v.setDateFinCellule(donnees.getDate("DateFinCellule"));
+			}
+			
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	
+	public static compoCelluleArbre getCompoCelluleArbre(){
+		model.compoCelluleArbre v = new model.compoCelluleArbre();
+
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+
+			String requeteSQL = "SELECT * FROM `compocellule`, cellule, utilisateur where compocellule.idUtilisateur = utilisateur.idUtilisateur and compocellule.idCellule = cellule.idCellule";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				
+				v.setFkCellule(donnees.getInt("idCellule"));
+				v.setFkUtilisateur(donnees.getInt("idUtilisateur"));
+				v.setDateDebutCellule(donnees.getDate("DateDebutCellule"));
+				v.setDateFinCellule(donnees.getDate("DateFinCellule"));
+			}
+			
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, e,"ERREUR",JOptionPane.ERROR_MESSAGE);
+		}
+		return v;
+	}
+	public static Vector<compoCelluleArbre> getCompoCelluleArbre(){
+		Vector<model.compoCelluleArbre> v = new Vector<model.compoCelluleArbre>();
+		
+		try{
+			Statement stat = controller.ControllerDB.connectionDB().createStatement();
+			
+			String requeteSQL = "SELECT * FROM `compocellule`, cellule, utilisateur where compocellule.idUtilisateur = utilisateur.idUtilisateur and compocellule.idCellule = cellule.idCellule";
+			ResultSet donnees = stat.executeQuery(requeteSQL);
+			ResultSetMetaData metadata = donnees.getMetaData();
+			
+			while(donnees.next()){
+				
+				v.addElement(new compoCellule(donnees.getInt("idCellule"),
+						donnees.getInt("idUtilisateur"),
+						donnees.getDate("dateDebutCellule"),
+						donnees.getDate("dateFinCellule")));
+			}		
+			
 			
 		} catch (SQLException e){
 			JOptionPane.showMessageDialog(null, e,"Erreur", JOptionPane.ERROR_MESSAGE);

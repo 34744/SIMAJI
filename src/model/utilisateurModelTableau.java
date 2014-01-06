@@ -22,6 +22,7 @@ public class utilisateurModelTableau extends AbstractTableModel {
 		columnNames.addElement("Prénom");
 		columnNames.addElement("N° Ulis");
 		columnNames.addElement("Adresse Mail");
+		columnNames.addElement("Actif");
 	}
 	
 	public int getColumnCount() {
@@ -52,6 +53,8 @@ public class utilisateurModelTableau extends AbstractTableModel {
 			return a.getNumUlis();
 		case 3:
 			return a.getMailUtilisateur();
+		case 4:
+			return a.getUtilisateurActif();
 		}
 		
 		return a;

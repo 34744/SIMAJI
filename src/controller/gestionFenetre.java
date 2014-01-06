@@ -26,6 +26,13 @@ public class gestionFenetre {
 		
 	}
 	
+	public static void configurationUtilisateur (boolean actifUtilisateur){
+		view.Parametres config = new view.Parametres(true);
+		view.mainJFrame.setContainerPanel(config);
+		
+	}
+	
+	
 	public static void accueil (){
 		view.accueil acc = new view.accueil();
 		view.mainJFrame.setContainerPanel(acc);

@@ -6,6 +6,7 @@ import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 import model.application;
+import model.utilisateur;
 
 public class addData {
 	public static void addApplication(application application) {
@@ -29,5 +30,33 @@ public class addData {
         }
         
 }
+	public static void addUtilisateur(utilisateur utilisateur) {
+        try {
+                Statement stat = controller.ControllerDB.connectionDB()
+                                .createStatement();
+                String instructionSQL = "INSERT INTO utilisateur (idUtilisateur, nomUtilisateur, prenomUtilisateur, numUlis, mailUtilisateur, utilisateurActif, directionUtilisateur)"
+                                + " VALUES (NULL, '" 
+                                + utilisateur.getNomUtilisateur()
+                                + "','"
+                                + utilisateur.getPrenomUtilisateur() 
+                                + "','"
+                                + utilisateur.getNumUlis()
+                                + "','"
+                                + utilisateur.getMailUtilisateur() 
+                                + "','"
+                                + utilisateur.getActifUtilisateur()
+                                + "','"
+                                + utilisateur.getUtilisateurDirection()
+                                + "')";
+                int nbIns = stat.executeUpdate(instructionSQL);
+               /* JOptionPane.showMessageDialog(null,
+                                "L'enregistrement a bien été effectué", "Enregistrement",
+                                JOptionPane.INFORMATION_MESSAGE);*/
 
+        } catch (SQLException aDO) {
+                JOptionPane.showMessageDialog(null, aDO, "Erreur Type",
+                                JOptionPane.ERROR_MESSAGE);
+        }
+        
+}
 }
